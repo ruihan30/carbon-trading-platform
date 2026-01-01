@@ -1,0 +1,13 @@
+psql -U postgres
+CREATE USER carbon_user WITH PASSWORD '';
+CREATE DATABASE carbon_db;
+GRANT ALL PRIVILEGES ON DATABASE carbon_db TO carbon_user;
+\q
+
+python create_tables.py
+
+\c carbon_db
+\dt
+
+alembic revision --autogenerate -m "Added new column to users"
+alembic upgrade head
