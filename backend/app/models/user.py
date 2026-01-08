@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql import func
 import uuid
 from app.database import Base
 
@@ -11,5 +12,5 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     company_uuid = Column(UUID, ForeignKey("company.company_uuid"))
-    created_at = Column(DateTime)
-    last_login = Column(DateTime)
+    created_at = Column(DateTime(timezone=True), default=func.now(), nullable=False)
+    last_login = Column(DateTime(timezone=True), nullable=True)
