@@ -13,9 +13,15 @@ class UserLoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+class UserData(BaseModel):
+    user_uuid: str
+    user_name: str
+    email: str
+
 class UserLoginResponse(BaseModel):
     access_token: str
     token_type: str
+    user: UserData
 
 class UserResponse(BaseModel):
     user_uuid: UUID

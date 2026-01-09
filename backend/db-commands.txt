@@ -1,8 +1,24 @@
 psql -U postgres
 CREATE USER carbon_user WITH PASSWORD '';
+
 CREATE DATABASE carbon_db;
-GRANT ALL PRIVILEGES ON DATABASE carbon_db TO carbon_user;
-\q
+\c carbon_db
+-- Connect to your database first
+\c your_database_name
+
+-- Grant all privileges on the schema to your user
+GRANT ALL ON SCHEMA public TO your_username;
+
+-- Grant privileges on all existing tables
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO your_username;
+
+-- Grant privileges on all sequences (for auto-increment)
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO your_username;
+
+-- Grant default privileges for future tables
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO your_username;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO your_username;
+
 
 python create_tables.py
 

@@ -29,7 +29,7 @@ import { login } from "@/api/api";
 // 1. Updated Schema to match Backend requirements
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
-  password: z.string().min(8, "Password must be at least 8 characters."),
+  password: z.string().min(2, "Password must be at least 2 characters."),
 });
 
 export function Login() {
@@ -45,31 +45,23 @@ export function Login() {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
-    try {
-      // 1. Call your FastAPI backend
-      const result = await login(data);
+async function onSubmit(data: z.infer<typeof formSchema>) {
+  setIsSubmitting(true);
+  try {
+    const result = await login(data);
 
-      if (result.access_token) {
-        // 1. Save to your Zustand store
-        setAuth(result.user, result.access_token);
+    // Now we have user data
+    setAuth(result.user, result.access_token);
 
-        // 2. Notify user
-        toast.success("Login successful!");
-
-        // 3. Redirect
-        navigate("/protected/home");
-      } else {
-        // Handle cases where the backend returns an error message in JSON
-        toast.error(result.detail || "Login failed");
-      }
-    } catch (error: any) {
-      toast.error("Server connection failed");
-    } finally {
-      setIsSubmitting(false);
-    }
+    toast.success("Login successful!");
+    navigate("/protected/home");
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.detail || "Login failed";
+    toast.error(errorMessage);
+  } finally {
+    setIsSubmitting(false);
   }
+}
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-slate-50">
